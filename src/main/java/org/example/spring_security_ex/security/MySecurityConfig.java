@@ -33,12 +33,31 @@ public class MySecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(authorize -> authorize
-                  .requestMatchers("/index.html").permitAll()
-                  .anyRequest().authenticated())
-        .formLogin(Customizer.withDefaults());
-    DefaultSecurityFilterChain chain = http.build();
-    chain.getFilters().forEach(System.out::println);
-    return chain;
+//    security - step3
+//    http.authorizeHttpRequests(authorize -> authorize
+//                  .requestMatchers("/index.html").permitAll()
+//                  .anyRequest().authenticated())
+//        .formLogin(Customizer.withDefaults());
+//    DefaultSecurityFilterChain chain = http.build();
+//    chain.getFilters().forEach(System.out::println);
+
+    // security - step4 : 커스텀 로그인 페이지
+    http.authorizeHttpRequests(auth -> auth
+            .requestMatchers("/login").permitAll()
+            .anyRequest().authenticated())
+        .csrf(csrf -> csrf.disable())
+        .formLogin(form -> form
+            .loginPage("/login")
+            .loginProcessingUrl("/authentication")
+            .usernameParameter("username")
+            .passwordParameter("password")
+            .defaultSuccessUrl("/", true)
+            .failureUrl("/login?error"))
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/login?logout")
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID"));
+    return http.build();
   };
 }
