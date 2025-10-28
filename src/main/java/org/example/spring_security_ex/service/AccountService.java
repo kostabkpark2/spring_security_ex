@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
   private final AccountRepository accountRepository;
+  // 암호화를 위해 passwordEncode 도 부품으로 가져와야 함
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -54,11 +57,17 @@ public class AccountService implements UserDetailsService {
 
   public void signup(SignupForm form) {
     // 동일한 username 이 있으면 안됨
+    Account account = new Account();
     if(!validateDuplicateAccount(form)) {
-      // account + 암호화
+      // account 정보와 password 암호화 처리
+      account.setUsername(form.getUsername());
+      account.setPassword(passwordEncoder.encode(form.getPassword()));
+      account.setAuthoriy(Role.USER);
+      // 필드 추가
+      account.setName(form.getName());
+      account.setPhone(form.getPhone());
+      accountRepository.save(account);
     }
-    Account account = accountRepository.
-    accountRepository.save(form);
   }
 
   public boolean validateDuplicateAccount(SignupForm form) {

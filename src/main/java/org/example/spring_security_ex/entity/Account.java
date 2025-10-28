@@ -14,6 +14,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class Account {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

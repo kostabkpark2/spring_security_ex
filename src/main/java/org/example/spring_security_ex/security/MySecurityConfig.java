@@ -18,22 +18,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class MySecurityConfig {
-  private final PasswordEncoder passwordEncoder;
+//  private final PasswordEncoder passwordEncoder;
 
-  @Bean
-  public UserDetailsService userDetailsService() {
-    UserDetails user = User.withDefaultPasswordEncoder()
-        .username("user")
-        .password("user1111")
-        .roles("USER")
-        .build();
-    UserDetails admin = User.withDefaultPasswordEncoder()
-        .username("admin")
-        .password("admin1111")
-        .roles("ADMIN","USER")
-        .build();
-    return new InMemoryUserDetailsManager(user, admin);
-  }
+//  @Bean
+//  public UserDetailsService userDetailsService() {
+//    UserDetails user = User.withDefaultPasswordEncoder()
+//        .username("user")
+//        .password("user1111")
+//        .roles("USER")
+//        .build();
+//    UserDetails admin = User.withDefaultPasswordEncoder()
+//        .username("admin")
+//        .password("admin1111")
+//        .roles("ADMIN","USER")
+//        .build();
+//    return new InMemoryUserDetailsManager(user, admin);
+//  }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -47,7 +47,7 @@ public class MySecurityConfig {
 
     // security - step4 : 커스텀 로그인 페이지
     http.authorizeHttpRequests(auth -> auth
-            .requestMatchers("/login").permitAll()
+            .requestMatchers("/login", "/account/signup").permitAll()
             .anyRequest().authenticated())
         .csrf(csrf -> csrf.disable())
         .formLogin(form -> form
