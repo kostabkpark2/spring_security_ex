@@ -1,9 +1,6 @@
 package org.example.spring_security_ex.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +20,8 @@ public class Account {
   private int id;
   private String username;
   private String password;
-  private Role authoriy; // USER, ADMIN
+  @Enumerated(EnumType.STRING) // 숫자가 아닌 문자열로 저장되게
+  private Role authoriy; // ADMIN , USER
   private String name;
   private String phone;
 }
