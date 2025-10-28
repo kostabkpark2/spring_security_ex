@@ -1,6 +1,7 @@
 package org.example.spring_security_ex.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.spring_security_ex.dto.SignupForm;
 import org.example.spring_security_ex.entity.Account;
 import org.example.spring_security_ex.entity.LoginUser;
 import org.example.spring_security_ex.entity.Role;
@@ -51,4 +52,21 @@ public class AccountService implements UserDetailsService {
     return authorities;
   }
 
+  public void signup(SignupForm form) {
+    // 동일한 username 이 있으면 안됨
+    if(!validateDuplicateAccount(form)) {
+      // account + 암호화
+    }
+    Account account = accountRepository.
+    accountRepository.save(form);
+  }
+
+  public boolean validateDuplicateAccount(SignupForm form) {
+    Optional<Account> byUsername = accountRepository.findByUsername(form.getUsername());
+    if(byUsername.isPresent()) {
+      //return true;
+      throw new IllegalStateException("이미 존재하는 회원입니다.");
+    }
+    return false;
+  }
 }
