@@ -49,7 +49,7 @@ public class MySecurityConfig {
     http.authorizeHttpRequests(auth -> auth
             .requestMatchers("/login", "/account/signup").permitAll()
             .anyRequest().authenticated())
-        .csrf(csrf -> csrf.disable())
+        //.csrf(csrf -> csrf.disable())
         .formLogin(form -> form
             .loginPage("/login")
             .loginProcessingUrl("/authentication")

@@ -57,15 +57,10 @@ public class AccountService implements UserDetailsService {
 
   public void signup(SignupForm form) {
     // 동일한 username 이 있으면 안됨
-    Account account = new Account();
     if(!validateDuplicateAccount(form)) {
       // account 정보와 password 암호화 처리
-      account.setUsername(form.getUsername());
-      account.setPassword(passwordEncoder.encode(form.getPassword()));
-      account.setAuthoriy(Role.USER);
+      Account account = Account.createAccount(form, passwordEncoder);
       // 필드 추가
-      account.setName(form.getName());
-      account.setPhone(form.getPhone());
       accountRepository.save(account);
     }
   }
