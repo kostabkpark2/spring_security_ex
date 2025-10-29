@@ -47,21 +47,26 @@ public class MySecurityConfig {
 
     // security - step4 : 커스텀 로그인 페이지
     http.authorizeHttpRequests(auth -> auth
-            .requestMatchers("/login", "/account/signup").permitAll()
-            .anyRequest().authenticated())
-        //.csrf(csrf -> csrf.disable())
-        .formLogin(form -> form
-            .loginPage("/login")
-            .loginProcessingUrl("/authentication")
-            .usernameParameter("username")
-            .passwordParameter("password")
-            .defaultSuccessUrl("/", true)
-            .failureUrl("/login?error"))
-        .logout(logout -> logout
-            .logoutUrl("/logout")
-            .logoutSuccessUrl("/login?logout")
-            .invalidateHttpSession(true)
-            .deleteCookies("JSESSIONID"));
+                .requestMatchers("/api/main").permitAll()
+                .anyRequest().authenticated());
     return http.build();
+//            .requestMatchers("/login", "/account/signup").permitAll()
+            //.requestMatchers().hasRole("USER")
+            //.requestMatchers().hasRole("ADMIN")
+
+        //.csrf(csrf -> csrf.disable())
+//        .formLogin(form -> form
+//            .loginPage("/login")
+//            .loginProcessingUrl("/authentication")
+//            .usernameParameter("username")
+//            .passwordParameter("password")
+//            .defaultSuccessUrl("/", true)
+//            .failureUrl("/login?error"))
+//        .logout(logout -> logout
+//            .logoutUrl("/logout")
+//            .logoutSuccessUrl("/login?logout")
+//            .invalidateHttpSession(true)
+//            .deleteCookies("JSESSIONID"));
+
   };
 }

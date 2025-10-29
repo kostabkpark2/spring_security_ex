@@ -1,3 +1,7 @@
+jwt:
+  secret: fadaa4176f9775b7d963e2f562c2adef4858081044ffe11e58e5d3cd6e54dc7d  # sha256 hashcode
+  expiration-milliseconds: 1800000    # 30 minutes
+
 spring:
   application:
     name: spring_security_ex
@@ -19,3 +23,5 @@ spring:
 #      name: test
 #      password: 1111
 #      roles: USER
+
+
