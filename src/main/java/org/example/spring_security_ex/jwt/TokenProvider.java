@@ -3,6 +3,7 @@ package org.example.spring_security_ex.jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.example.spring_security_ex.entity.Account;
+import org.example.spring_security_ex.entity.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -44,8 +45,8 @@ public class TokenProvider {
     return name;
   }
 
-  public String getRole(String token) {
-    String role = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+  public Role getRole(String token) {
+    Role role = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", Role.class);
     return role;
   }
 

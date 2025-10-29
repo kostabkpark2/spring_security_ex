@@ -6,7 +6,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.spring_security_ex.dto.CustomUserDetails;
+import org.example.spring_security_ex.entity.Account;
 import org.example.spring_security_ex.entity.LoginUser;
+import org.example.spring_security_ex.entity.Role;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -39,9 +46,19 @@ public class JwtFilter extends OncePerRequestFilter {
     // token 이 유효한 경우, 토큰에서 name, username, role 을 획득
     String name = tokenProvider.getName(token);
     String username = tokenProvider.getUsername(token);
-    String role = tokenProvider.getRole(token) ;
+    Role role = tokenProvider.getRole(token) ;
 
-    // LoginUser 에 회원정보 담기 --> userDetails 구현한 user 승속
-    LoginUser loginUser = new LoginUser(username,  null, )
+    Account account = new Account();
+    account.setName(name);
+    account.setUsername(username);
+    account.setAuthoriy(role);
+
+    // CustomUserDetails 에 회원정보 담기 --> userDetails 구현한 user 승속
+    CustomUserDetails customUserDetails = new CustomUserDetails(account);
+    // 스프링 시큐리티 인증 토큰 생성
+    Authentication authToken  = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+    // 세션에 사용자 정보 등록
+    SecurityContextHolder.getContext().setAuthentication(authToken);
+    filterChain.doFilter(request, response);
   }
 }
