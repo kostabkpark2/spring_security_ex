@@ -22,7 +22,7 @@ public class TokenProvider {
         SignatureAlgorithm.HS256.getJcaName());
     this.tokenValidityMilliSeconds = tokenValidityMilliSeconds;
   }
-  // token build
+  // token build  ==> 리팩토링 대상인지 확인 ==> loginAccountDto 로 컨트롤러에서 전달되는지 확인
   public String createJWT(Account account, Long expiredMS) {
     return Jwts.builder()
         .claim("username", account.getUsername())
@@ -34,4 +34,24 @@ public class TokenProvider {
         .compact();
   }
 
+  public String getUsername(String token) {
+    String username = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+    return username;
+  }
+
+  public String getName(String token) {
+    String name = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("name", String.class);
+    return name;
+  }
+
+  public String getRole(String token) {
+    String role = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+    return role;
+  }
+
+  // 발급받은 토큰 만료 여부 확인
+  public boolean isExpired(String token) {
+    boolean isValid = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+    return isValid;
+  }
 }
