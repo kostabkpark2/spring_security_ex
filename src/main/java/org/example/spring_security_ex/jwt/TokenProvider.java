@@ -17,8 +17,8 @@ public class TokenProvider {
   private final SecretKey secretKey;
   private final long tokenValidityMilliSeconds;
 
-  public TokenProvider(@Value("{jwt.secret}") String secret,
-                       @Value("{jwt.expiration-milliseconds}")long tokenValidityMilliSeconds) {
+  public TokenProvider(@Value("${jwt.secret}") String secret,
+                       @Value("${jwt.expiration-milliseconds}") long tokenValidityMilliSeconds) {
     secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
         SignatureAlgorithm.HS256.getJcaName());
     this.tokenValidityMilliSeconds = tokenValidityMilliSeconds;

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -54,14 +55,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     String role = auth.getAuthority();
     Account account = new Account();
     account.setUsername(username);
-    // 리팩토링 대상임 ==>
-    account.setAuthoriy(Role.USER);
+    // 문자열을 enum 값으로 변환
+    account.setAuthoriy(Role.valueOf(role));
     String token = tokenProvider.createJWT(account, 60*10*1000L);
+
+//    // 스프링 시큐리티 인증 토큰 생성  ?????
+//    Authentication authToken  = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+//    // 세션에 사용자 정보 등록 ???????
+//    SecurityContextHolder.getContext().setAuthentication(authToken);
+
     response.addHeader("Authorization", "Bearer " + token);
   }
 
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-    response.setStatus(401);
+    response.setStatus(401); // unauthorized
   }
 }

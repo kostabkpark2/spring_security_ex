@@ -45,6 +45,8 @@ public class JwtFilter extends OncePerRequestFilter {
     String username = tokenProvider.getUsername(token);
     Role role = tokenProvider.getRole(token) ;
 
+    log.info("JwtFilter ::: role ==> {}", role.toString());
+
     Account account = new Account();
     account.setName(name);
     account.setUsername(username);
@@ -54,8 +56,9 @@ public class JwtFilter extends OncePerRequestFilter {
     CustomUserDetails customUserDetails = new CustomUserDetails(account);
     // 스프링 시큐리티 인증 토큰 생성
     Authentication authToken  = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-    // 세션에 사용자 정보 등록
+    // 세션에 사용자 정보 등록 ==> stateless 이기 때문에 SpringMVC 에서 꺼내 쓰기 위해 담아놓는다.
     SecurityContextHolder.getContext().setAuthentication(authToken);
+
     filterChain.doFilter(request, response);
   }
 }
