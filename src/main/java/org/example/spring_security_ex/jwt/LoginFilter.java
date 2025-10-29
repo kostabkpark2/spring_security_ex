@@ -50,6 +50,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       // 인증 토큰 생성
       UsernamePasswordAuthenticationToken authenticationToken =
           new UsernamePasswordAuthenticationToken(username, password);
+      log.info("authenticationToken : {}", authenticationToken);
 
       // AuthenticationManager 에게 인증 위임
       Authentication authentication = authenticationManager.authenticate(authenticationToken);

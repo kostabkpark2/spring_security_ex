@@ -5,6 +5,7 @@ import org.example.spring_security_ex.dto.SignupForm;
 import org.example.spring_security_ex.entity.Account;
 import org.example.spring_security_ex.entity.LoginUser;
 import org.example.spring_security_ex.entity.Role;
+import org.example.spring_security_ex.jwt.CustomUserDetails;
 import org.example.spring_security_ex.repository.AccountRepository;
 import org.springframework.cglib.proxy.NoOp;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,12 +35,8 @@ public class AccountService implements UserDetailsService {
       throw new UsernameNotFoundException(username);
     }
     Account account = byUsername.get();
-    return new LoginUser(
-        account.getUsername(),
-        account.getPassword(),
-        getAuthorityList(account.getAuthoriy()),
-        account.getName(),
-        account.getPhone());
+    // LoginUser() 생성 코드를 CustomUserDetails 생성자로 수정
+    return new CustomUserDetails(account);
   }
 
   // DB 에는 원자값만 저장할 수 있기 때문에
