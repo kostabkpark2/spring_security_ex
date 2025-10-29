@@ -1,4 +1,4 @@
-package org.example.spring_security_ex.dto;
+package org.example.spring_security_ex.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.example.spring_security_ex.entity.Account;
