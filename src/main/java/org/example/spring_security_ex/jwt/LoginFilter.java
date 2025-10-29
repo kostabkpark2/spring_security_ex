@@ -31,18 +31,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     // 인증 시도하는 정보 가져와서 로그 찍어서 확인해보기 - 확인 후 삭제하기
+// 테스트시 post 메서드로 localhost:8080/login 으로 접속
+// 단, parameter 에서 바로 꺼내려면 body -> x-www-form-urlencoded 로
+// 로그인 정보 입력하고 아래 둘 중의 하나의 코드 사용하면 됨.
 //    String username = request.getParameter("username");
 //    String password = request.getParameter("password");
-    //String username = super.obtainUsername(request);
-    //String password = super.obtainPassword(request);
 
-    try {
+    String username = super.obtainUsername(request);
+    String password = super.obtainPassword(request);
+
+// body -> raw -> json 으로 입력하면 자바 객체로 변환해줘야 하기 때문에 아래와 같이 코드 변경해야 함
+//    try {
       // JSON 데이터 읽기
-      ObjectMapper objectMapper = new ObjectMapper();
-      LoginForm loginRequest = objectMapper.readValue(request.getInputStream(), LoginForm.class);
-
-      String username = loginRequest.getUsername();
-      String password = loginRequest.getPassword();
+//      ObjectMapper objectMapper = new ObjectMapper();
+//      LoginForm loginRequest = objectMapper.readValue(request.getInputStream(), LoginForm.class);
+//
+//      String username = loginRequest.getUsername();
+//      String password = loginRequest.getPassword();
 
       log.info("Attempting to authenticate username : {}", username);
       log.info("Attempting to authenticate password : {}", password);
@@ -58,9 +63,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       log.info("authentication : {} ", authentication);
       return authentication;
 
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+//    } catch (IOException e) {
+//      throw new RuntimeException(e);
+//    }
   }
 
   @Override
