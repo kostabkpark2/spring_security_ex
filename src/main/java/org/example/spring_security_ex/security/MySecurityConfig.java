@@ -70,19 +70,19 @@ public class MySecurityConfig {
 
 
     http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/main").permitAll()
+                .requestMatchers("/api/main", "/login", "/join").permitAll()
                 .anyRequest().authenticated());
-
 
     http.csrf(csrf -> csrf.disable());
     http.formLogin(auth -> auth.disable());
     http.httpBasic(auth -> auth.disable());
-    http.sessionManagement(session ->
-        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.addFilterBefore(new JwtFilter(tokenProvider), LoginFilter.class);
     http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), tokenProvider),
           UsernamePasswordAuthenticationFilter.class);
+
+    http.sessionManagement(session ->
+        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     return http.build();
   };

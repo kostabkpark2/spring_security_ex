@@ -1,11 +1,13 @@
 package org.example.spring_security_ex.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.spring_security_ex.dto.LoginForm;
 import org.example.spring_security_ex.entity.Account;
 import org.example.spring_security_ex.entity.Role;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,18 +31,35 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     // 인증 시도하는 정보 가져와서 로그 찍어서 확인해보기 - 확인 후 삭제하기
-    String username = super.obtainUsername(request);
-    String password = super.obtainPassword(request);
-    // 인증 시도하는 정보 가져와서 로그 찍어서 확인해보기 - 확인 후 삭제하기
-    log.info("Attempting to authenticate username : {} ", username);
-    log.info("Attempting to authenticate password : {} ", password);
-    // 스프링 시큐리티에서 username 과 password 를 검증하기 위해 token 에 담기
-    UsernamePasswordAuthenticationToken authToken =
-        new UsernamePasswordAuthenticationToken(username, password, null);
-    // 토큰에 담은 내용을 검증하기 위해 AuthenticationManager 의 authenticate() 메서드로 검증
-    Authentication authentication = authenticationManager.authenticate(authToken);
-    log.info("authentication : {} ", authentication);
-    return authentication;
+//    String username = request.getParameter("username");
+//    String password = request.getParameter("password");
+    //String username = super.obtainUsername(request);
+    //String password = super.obtainPassword(request);
+
+    try {
+      // JSON 데이터 읽기
+      ObjectMapper objectMapper = new ObjectMapper();
+      LoginForm loginRequest = objectMapper.readValue(request.getInputStream(), LoginForm.class);
+
+      String username = loginRequest.getUsername();
+      String password = loginRequest.getPassword();
+
+      log.info("Attempting to authenticate username : {}", username);
+      log.info("Attempting to authenticate password : {}", password);
+
+      // 인증 토큰 생성
+      UsernamePasswordAuthenticationToken authenticationToken =
+          new UsernamePasswordAuthenticationToken(username, password);
+
+      // AuthenticationManager 에게 인증 위임
+      Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+      log.info("authentication : {} ", authentication);
+      return authentication;
+
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
