@@ -31,7 +31,7 @@ public class TokenProvider {
         .claim("role", account.getAuthoriy())
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + expiredMS))
-        .signWith(secretKey)
+        .signWith(secretKey, SignatureAlgorithm.HS256) // 알고리즘 명시 필수
         .compact();
   }
 
@@ -46,7 +46,9 @@ public class TokenProvider {
   }
 
   public Role getRole(String token) {
-    Role role = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", Role.class);
+    Role role = null;
+    //     // 리팩토링 대상
+    //Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", Role.class);
     return role;
   }
 

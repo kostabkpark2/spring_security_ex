@@ -43,14 +43,16 @@ public class JwtFilter extends OncePerRequestFilter {
     // token 이 유효한 경우, 토큰에서 name, username, role 을 획득
     String name = tokenProvider.getName(token);
     String username = tokenProvider.getUsername(token);
-    Role role = tokenProvider.getRole(token) ;
+    // 리팩토링 대상
+    //Role role = tokenProvider.getRole(token) ;
 
-    log.info("JwtFilter ::: role ==> {}", role.toString());
+    //log.info("JwtFilter ::: role ==> {}", role.toString());
 
     Account account = new Account();
     account.setName(name);
     account.setUsername(username);
-    account.setAuthoriy(role);
+    // 리팩토링 대상
+    //account.setAuthoriy(role);
 
     // CustomUserDetails 에 회원정보 담기 --> userDetails 구현한 user 승속
     CustomUserDetails customUserDetails = new CustomUserDetails(account);

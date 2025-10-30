@@ -42,7 +42,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 // body -> raw -> json 으로 입력하면 자바 객체로 변환해줘야 하기 때문에 아래와 같이 코드 변경해야 함
 //    try {
-      // JSON 데이터 읽기
+      // JSON 데이터 읽기 ==> objectmapper 로 우리가 자바 객체로 변환
 //      ObjectMapper objectMapper = new ObjectMapper();
 //      LoginForm loginRequest = objectMapper.readValue(request.getInputStream(), LoginForm.class);
 //
